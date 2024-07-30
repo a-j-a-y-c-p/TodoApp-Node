@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Todo List</title>
+  <style>
+    button {
+      margin-left: 5px;
+    }
+  </style>
 </head>
 <body>
   <h1>Todo List</h1>
@@ -22,6 +27,17 @@
       todos.forEach(todo => {
         const li = document.createElement('li');
         li.textContent = todo.task;
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', async () => {
+          await fetch(`/api/todos/${todo.id}`, {
+            method: 'DELETE'
+          });
+          fetchTodos();
+        });
+
+        li.appendChild(deleteButton);
         todoList.appendChild(li);
       });
     }
