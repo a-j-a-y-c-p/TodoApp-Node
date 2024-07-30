@@ -35,5 +35,19 @@ router.post('/', (req, res) => {
   res.status(201).json(newTodo);
 });
 
+// Delete a todo
+router.delete('/:id', (req, res) => {
+    const todos = readTodos();
+    const todoId = parseInt(req.params.id, 10);
+    const newTodos = todos.filter(todo => todo.id !== todoId);
+  
+    if (todos.length !== newTodos.length) {
+      writeTodos(newTodos);
+      res.status(204).end();
+    } else {
+      res.status(404).json({ error: 'Todo not found' });
+    }
+  });
+
 
 module.exports = router;
