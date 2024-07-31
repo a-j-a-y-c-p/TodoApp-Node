@@ -49,13 +49,36 @@
       word-wrap: break-word;
       max-width: 700px;
     }
+    
+    button.add {
+      background-color: #008CBA;
+      color: white;
+    }
+    button.complete {
+      background-color: #4CAF50;
+      color: white;
+    }
+    button.undo {
+      background-color: #FFEB3B;
+      color: black;
+    }
+    button.delete {
+      background-color: #f44336;
+      color: white;
+    }
+    button.add:hover,
+    button.complete:hover,
+    button.undo:hover,
+    button.delete:hover {
+      opacity: 0.8;
+    }
   </style>
 </head>
 <body>
   <h1>Todo List</h1>
   <form id="todo-form">
     <input type="text" id="todo-task" placeholder="Enter a new task">
-    <button type="submit">Add</button>
+    <button type="submit" class="add">Add</button>
   </form>
   <table>
     <thead>
@@ -88,6 +111,7 @@
         const completeTd = document.createElement('td');
         const completeButton = document.createElement('button');
         completeButton.textContent = todo.completed ? 'Undo' : 'Complete';
+        completeButton.className = todo.completed ? 'undo' : 'complete';
         completeButton.addEventListener('click', async () => {
           await fetch(`/api/todos/${todo.id}`, {
             method: 'PUT',
@@ -103,6 +127,7 @@
         const deleteTd = document.createElement('td');
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete';
+        deleteButton.className = 'delete';
         deleteButton.addEventListener('click', async () => {
           await fetch(`/api/todos/${todo.id}`, {
             method: 'DELETE'
