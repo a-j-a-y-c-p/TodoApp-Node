@@ -5,11 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Todo List</title>
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    #todo-form {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #todo-task {
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
     .completed {
       text-decoration: line-through;
     }
-    button {
-      margin-left: 5px;
+    .actions button {
+      margin: 0 5px;
+    }
+
+    .text-wrap {
+      white-space: normal;
+      word-wrap: break-word;
+      max-width: 700px;
     }
   </style>
 </head>
@@ -19,7 +57,17 @@
     <input type="text" id="todo-task" placeholder="Enter a new task">
     <button type="submit">Add</button>
   </form>
-  <ul id="todo-list"></ul>
+  <table>
+    <thead>
+        <tr>
+            <th>Task</th>
+            <th>Status</th>
+            <th>Complete/Undo</th>
+            <th>Delete</th>
+          </tr>
+    </thead>
+    <tbody id="todo-list"></tbody>
+  </table>
 
   <script>
     async function fetchTodos() {
@@ -28,10 +76,16 @@
       const todoList = document.getElementById('todo-list');
       todoList.innerHTML = '';
       todos.forEach(todo => {
-        const li = document.createElement('li');
-        li.textContent = todo.task;
-        li.className = todo.completed ? 'completed' : '';
+        const tr = document.createElement('tr');
 
+        const taskTd = document.createElement('td');
+        taskTd.textContent = todo.task;
+        taskTd.className = `text-wrap ${todo.completed ? 'completed' : ''}`;
+
+        const statusTd = document.createElement('td');
+        statusTd.textContent = todo.completed ? 'Completed' : 'Pending';
+
+        const completeTd = document.createElement('td');
         const completeButton = document.createElement('button');
         completeButton.textContent = todo.completed ? 'Undo' : 'Complete';
         completeButton.addEventListener('click', async () => {
@@ -44,7 +98,9 @@
           });
           fetchTodos();
         });
+        completeTd.appendChild(completeButton);
 
+        const deleteTd = document.createElement('td');
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete';
         deleteButton.addEventListener('click', async () => {
@@ -53,16 +109,24 @@
           });
           fetchTodos();
         });
+        deleteTd.appendChild(deleteButton);
 
-        li.appendChild(completeButton);
-        li.appendChild(deleteButton);
-        todoList.appendChild(li);
+        tr.appendChild(taskTd);
+        tr.appendChild(statusTd);
+        tr.appendChild(completeTd);
+        tr.appendChild(deleteTd);
+
+        todoList.appendChild(tr);
       });
     }
 
     document.getElementById('todo-form').addEventListener('submit', async (event) => {
       event.preventDefault();
-      const task = document.getElementById('todo-task').value;
+      const task = document.getElementById('todo-task').value.trim();
+      if (task === '') {
+        alert('Task cannot be empty');
+        return;
+      }
       await fetch('/api/todos', {
         method: 'POST',
         headers: {
