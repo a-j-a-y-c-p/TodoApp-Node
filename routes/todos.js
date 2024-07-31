@@ -49,5 +49,21 @@ router.delete('/:id', (req, res) => {
     }
   });
 
+  // Update a todo
+router.put('/:id', (req, res) => {
+    const todos = readTodos();
+    const todoId = parseInt(req.params.id, 10);
+    const todoIndex = todos.findIndex(todo => todo.id === todoId);
+  
+    if (todoIndex !== -1) {
+      todos[todoIndex].task = req.body.task;
+      todos[todoIndex].completed = req.body.completed;
+      writeTodos(todos);
+      res.json(todos[todoIndex]);
+    } else {
+      res.status(404).json({ error: 'Todo not found' });
+    }
+  });
+
 
 module.exports = router;
