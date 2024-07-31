@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Todo List</title>
   <style>
+    .completed {
+      text-decoration: line-through;
+    }
     button {
       margin-left: 5px;
     }
@@ -27,6 +30,20 @@
       todos.forEach(todo => {
         const li = document.createElement('li');
         li.textContent = todo.task;
+        li.className = todo.completed ? 'completed' : '';
+
+        const completeButton = document.createElement('button');
+        completeButton.textContent = todo.completed ? 'Undo' : 'Complete';
+        completeButton.addEventListener('click', async () => {
+          await fetch(`/api/todos/${todo.id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ task: todo.task, completed: !todo.completed })
+          });
+          fetchTodos();
+        });
 
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete';
@@ -37,6 +54,7 @@
           fetchTodos();
         });
 
+        li.appendChild(completeButton);
         li.appendChild(deleteButton);
         todoList.appendChild(li);
       });
