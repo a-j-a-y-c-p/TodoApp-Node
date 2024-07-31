@@ -59,12 +59,12 @@ The application is designed using the following components:
 4. **Open the application in your browser**:
     Navigate to http://localhost:3000
 
-### Project Structure
+## Project Structure
    index.js: Server-side code.
    todos.json: JSON file to store todos.
    public/index.html: Client-side code (HTML, CSS, JavaScript).
 
-### Usage
+## Usage
    Add a Todo: Enter a task in the input box and click the "Add" button (blue).
    Complete/Undo a Todo: Click the "Complete" button (green) to mark a task as completed or "Undo" button (yellow) to mark it as pending.
    Delete a Todo: Click the "Delete" button (red) to remove the task from the list.
